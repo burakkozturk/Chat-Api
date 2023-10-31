@@ -24,18 +24,20 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public User createCustomer(SignupRequest signupRequest) {
+    public User createUser(SignupRequest signupRequest) {
         //Check if customer already exist
-        if (userRepository.existsByEmail(signupRequest.getEmail())) {
+        if (("email".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByEmail(signupRequest.getEmail())) ||
+                ("phone".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByPhoneNumber(signupRequest.getPhoneNumber()))) {
             return null;
         }
 
         User customer = new User();
-        BeanUtils.copyProperties(signupRequest,customer);
+        BeanUtils.copyProperties(signupRequest, customer);
 
-        //Hash the password before saving
-        String hashPassword = passwordEncoder.encode(signupRequest.getPassword());
-        customer.setPassword(hashPassword);
+        // Hash the password before saving
+        String hashedPassword = passwordEncoder.encode(signupRequest.getPassword());
+        customer.setPassword(hashedPassword);
+
         User createdCustomer = userRepository.save(customer);
         customer.setId(createdCustomer.getId());
         return customer;

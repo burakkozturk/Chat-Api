@@ -4,5 +4,5 @@ import app.circle.dto.SignupRequest;
 import app.circle.entity.User;
 
 public interface AuthService {
-    User createCustomer(SignupRequest signupRequest);
+    User createUser(SignupRequest signupRequest);
 }

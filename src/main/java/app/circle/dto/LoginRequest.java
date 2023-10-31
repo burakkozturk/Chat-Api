@@ -3,16 +3,16 @@ package app.circle.dto;
 
 public class LoginRequest {
 
-    private String email;
+    private String emailOrPhoneNumber; // E-posta veya telefon numarası
 
     private String password;
 
-    public String getEmail() {
-        return email;
+    public String getEmailOrPhoneNumber() {
+        return emailOrPhoneNumber;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailOrPhoneNumber(String emailOrPhoneNumber) {
+        this.emailOrPhoneNumber = emailOrPhoneNumber;
     }
 
     public String getPassword() {

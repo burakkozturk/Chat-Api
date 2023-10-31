@@ -2,10 +2,14 @@ package app.circle.controller;
 
 import app.circle.dto.LoginRequest;
 import app.circle.dto.LoginResponse;
+import app.circle.dto.SignupRequest;
+import app.circle.entity.User;
+import app.circle.service.AuthService;
 import app.circle.service.jwt.UserServiceImpl;
 import app.circle.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -18,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
+
 @RestController
-@RequestMapping("/login")
-public class LoginController {
+@RequestMapping("/auth")
+public class AuthenticationController {
+
 
     private final AuthenticationManager authenticationManager;
 
@@ -28,29 +34,43 @@ public class LoginController {
 
     private final JwtUtils jwtUtil;
 
+    private final AuthService authService;
 
-    @Autowired
-    public LoginController(AuthenticationManager authenticationManager, UserServiceImpl userService, JwtUtils jwtUtil) {
+    public AuthenticationController(AuthenticationManager authenticationManager, UserServiceImpl userService, JwtUtils jwtUtil, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+        this.authService = authService;
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws IOException {
+        UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmailOrPhoneNumber());
+
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetails, loginRequest.getPassword(), userDetails.getAuthorities()));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Incorrect email or password.");
+            // E-posta veya şifre yanlış
+            throw new BadCredentialsException("Incorrect email/phone or password.");
         } catch (DisabledException disabledException) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Customer is not activated");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User is not activated");
             return null;
         }
-        final UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
+
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
         return new LoginResponse(jwt);
     }
 
-}
 
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signupCustomer(@RequestBody SignupRequest signupRequest) {
+        User createdCustomer = authService.createUser(signupRequest);
+        if (createdCustomer != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create user");
+        }
+    }
+}

@@ -22,11 +22,18 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // Write logic to fetch customer from DB
-        User customer = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found with email: " + email));
+    public UserDetails loadUserByUsername(String emailOrPhoneNumber) throws UsernameNotFoundException {
+        User customer = userRepository.findByEmail(emailOrPhoneNumber)
+                .orElseGet(() -> userRepository.findByPhoneNumber(emailOrPhoneNumber)
+                        .orElseThrow(() -> new UsernameNotFoundException("Customer not found with email or phone number: " + emailOrPhoneNumber)));
 
-        return new org.springframework.security.core.userdetails.User(customer.getEmail(), customer.getPassword(), Collections.emptyList());
+        return customer;
+    }
+
+    public UserDetails loadUserByPhoneNumber(String phoneNumber) throws UsernameNotFoundException {
+        User customer = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UsernameNotFoundException("Customer not found with phone number: " + phoneNumber));
+
+        return customer;
     }
 }
