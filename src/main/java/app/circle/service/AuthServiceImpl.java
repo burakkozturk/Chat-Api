@@ -29,16 +29,16 @@ public class AuthServiceImpl implements AuthService {
         // E-posta veya telefon numarası zaten kayıtlı mı kontrol et
 
         if ("email".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new RegistrationException("E-posta adresi zaten kayıtlı.");
+            throw new RegistrationException("Email address is already registered");
         }
 
         if ("phone".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByPhoneNumber(signupRequest.getPhoneNumber())) {
-            throw new RegistrationException("Telefon numarası zaten kayıtlı.");
+            throw new RegistrationException("Phone Number is already registered.");
         }
 
-        if ("multi".equalsIgnoreCase(signupRequest.getSignupType())) {
+        if ("both".equalsIgnoreCase(signupRequest.getSignupType())) {
             if (userRepository.existsByEmail(signupRequest.getEmail()) || userRepository.existsByPhoneNumber(signupRequest.getPhoneNumber())) {
-                throw new RegistrationException("E-posta veya telefon numarası zaten kayıtlı.");
+                throw new RegistrationException("Email address or Phone Number is already registered");
             }
         }
 
