@@ -3,6 +3,7 @@ package app.circle.service;
 
 import app.circle.dto.SignupRequest;
 import app.circle.entity.User;
+import app.circle.exceptions.RegistrationException;
 import app.circle.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +26,26 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User createUser(SignupRequest signupRequest) {
-        //Check if customer already exist
-        if (("email".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByEmail(signupRequest.getEmail())) ||
-                ("phone".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByPhoneNumber(signupRequest.getPhoneNumber()))) {
-            return null;
+        // E-posta veya telefon numarası zaten kayıtlı mı kontrol et
+
+        if ("email".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByEmail(signupRequest.getEmail())) {
+            throw new RegistrationException("E-posta adresi zaten kayıtlı.");
+        }
+
+        if ("phone".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByPhoneNumber(signupRequest.getPhoneNumber())) {
+            throw new RegistrationException("Telefon numarası zaten kayıtlı.");
+        }
+
+        if ("multi".equalsIgnoreCase(signupRequest.getSignupType())) {
+            if (userRepository.existsByEmail(signupRequest.getEmail()) || userRepository.existsByPhoneNumber(signupRequest.getPhoneNumber())) {
+                throw new RegistrationException("E-posta veya telefon numarası zaten kayıtlı.");
+            }
         }
 
         User customer = new User();
         BeanUtils.copyProperties(signupRequest, customer);
 
-        // Hash the password before saving
+        // Şifreyi hashlemeden önce
         String hashedPassword = passwordEncoder.encode(signupRequest.getPassword());
         customer.setPassword(hashedPassword);
 

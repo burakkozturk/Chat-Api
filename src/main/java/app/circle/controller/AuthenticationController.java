@@ -3,6 +3,7 @@ package app.circle.controller;
 import app.circle.dto.LoginRequest;
 import app.circle.dto.LoginResponse;
 import app.circle.dto.SignupRequest;
+import app.circle.dto.SignupResponse;
 import app.circle.entity.User;
 import app.circle.service.AuthService;
 import app.circle.service.jwt.UserServiceImpl;
@@ -50,9 +51,10 @@ public class AuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetails, loginRequest.getPassword(), userDetails.getAuthorities()));
         } catch (BadCredentialsException e) {
-            // E-posta veya şifre yanlış
+
             throw new BadCredentialsException("Incorrect email/phone or password.");
         } catch (DisabledException disabledException) {
+
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "User is not activated");
             return null;
         }
@@ -63,12 +65,19 @@ public class AuthenticationController {
     }
 
 
-
     @PostMapping("/signup")
-    public ResponseEntity<?> signupCustomer(@RequestBody SignupRequest signupRequest) {
-        User createdCustomer = authService.createUser(signupRequest);
-        if (createdCustomer != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
+    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
+        SignupResponse signupResponse = new SignupResponse();
+
+        User createdUser = authService.createUser(signupRequest);
+        if (createdUser != null) {
+            String token = jwtUtil.generateToken(createdUser.getUsername());
+            signupResponse.setId(createdUser.getId());
+            signupResponse.setEmail(createdUser.getEmail());
+            signupResponse.setPhoneNumber(createdUser.getPhoneNumber());
+            signupResponse.setToken(token);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(signupResponse);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create user");
         }
