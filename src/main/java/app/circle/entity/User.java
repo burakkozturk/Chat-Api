@@ -30,6 +30,9 @@ public class User implements UserDetails {
     @Column( nullable = true)
     private String phoneNumber;
 
+    @Column(nullable = false)
+    private String role = "ROLE_USER";
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -100,5 +103,13 @@ public class User implements UserDetails {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

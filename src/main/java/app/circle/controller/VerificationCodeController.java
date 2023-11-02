@@ -1,6 +1,6 @@
 package app.circle.controller;
 
-import app.circle.service.EmailService;
+import app.circle.service.VerificationCodeService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/verification")
-public class VerificationController {
+public class VerificationCodeController {
 
     @Autowired
-    private EmailService emailService;
+    private VerificationCodeService emailService;
 
     @PostMapping("/send-code")
     public ResponseEntity<String> sendVerificationEmail(@RequestParam String toEmail) {

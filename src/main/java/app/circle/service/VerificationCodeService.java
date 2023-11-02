@@ -1,25 +1,30 @@
 package app.circle.service;
+import app.circle.entity.VerificationCode;
 import app.circle.utils.VerificationCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class EmailService {
+public class VerificationCodeService {
+
 
     @Autowired
     private JavaMailSender mailSender;
 
-    // Geçici kod deposu olarak bir HashMap kullanıyoruz
-    private Map<String, String> verificationCodes = new HashMap<>();
+    private Map<String, VerificationCode> verificationCodes = new HashMap<>();
 
     public void sendVerificationEmail(String toEmail) {
         String code = VerificationCodeGenerator.generateVerificationCode();
-        verificationCodes.put(toEmail, code);  // E-posta adresini ve kodu sakla
+        LocalDateTime expirationTime = LocalDateTime.now().plus(2, ChronoUnit.MINUTES);
+        VerificationCode verificationCode = new VerificationCode(code, expirationTime);
+        verificationCodes.put(toEmail, verificationCode);
 
         String subject = "Doğrulama Kodunuz";
         String body = "Doğrulama kodunuz: " + code;
@@ -35,7 +40,17 @@ public class EmailService {
     }
 
     public boolean verifyVerificationCode(String email, String code) {
-        String storedCode = verificationCodes.get(email);
-        return code.equals(storedCode);
+        VerificationCode verificationCode = verificationCodes.get(email);
+        if (verificationCode == null) {
+            return false; // Geçerli bir doğrulama kodu bulunamadı.
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(verificationCode.getExpirationTime()) && code.equals(verificationCode.getCode())) {
+            return true; // Doğrulama kodu geçerli ve hala süresi içinde.
+        } else {
+            verificationCodes.remove(email); // Süresi geçen kodu kaldır.
+            return false;
+        }
     }
 }

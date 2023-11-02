@@ -6,11 +6,11 @@ public class SignupRequest {
 
 
     private String email;
-
     private String phoneNumber;
-
     private String password;
     private String signupType;
+
+
 
 
 

@@ -8,6 +8,8 @@ public class SignupResponse {
     private String email;
     private String phoneNumber;
     private String token;
+    private String role;
+
 
     public UUID getId() {
         return id;
@@ -39,5 +41,13 @@ public class SignupResponse {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

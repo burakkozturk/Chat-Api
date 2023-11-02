@@ -74,6 +74,7 @@ public class AuthenticationController {
             String token = jwtUtil.generateToken(createdUser.getUsername());
             signupResponse.setId(createdUser.getId());
             signupResponse.setEmail(createdUser.getEmail());
+            signupResponse.setRole(createdUser.getRole());
             signupResponse.setPhoneNumber(createdUser.getPhoneNumber());
             signupResponse.setToken(token);
 

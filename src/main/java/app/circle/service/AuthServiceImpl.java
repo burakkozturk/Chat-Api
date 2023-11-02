@@ -45,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
         User customer = new User();
         BeanUtils.copyProperties(signupRequest, customer);
 
+        customer.setRole("ROLE_USER");
         // Şifreyi hashlemeden önce
         String hashedPassword = passwordEncoder.encode(signupRequest.getPassword());
         customer.setPassword(hashedPassword);
