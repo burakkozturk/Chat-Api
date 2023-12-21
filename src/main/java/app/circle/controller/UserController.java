@@ -39,8 +39,7 @@ public class UserController {
     public ResponseEntity<String> updateNickname(
             @RequestHeader("Authorization") String token,
             @RequestBody UpdateNicknameRequest request) {
-        // Token'ı doğrulayın ve kullanıcı kimliğini alın.
-        // Örnek JWT doğrulama işlemi burada yapılmalıdır.
+
 
         UUID userId = request.getUserId();
         String newNickname = request.getNewNickname();
