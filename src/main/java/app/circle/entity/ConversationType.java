@@ -6,3 +6,5 @@ public enum ConversationType {
 
     CHAMBER
 }
+
+// How to generate
