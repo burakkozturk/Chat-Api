@@ -1,6 +1,6 @@
-package app.circle.entity;
-
-public enum ConversationType {
-    PRIVATE,
-    GROUP
-}
+//package app.circle.entity;
+//
+//public enum ConversationType {
+//    PRIVATE,
+//    GROUP
+//}
