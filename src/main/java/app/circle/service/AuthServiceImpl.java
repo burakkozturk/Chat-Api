@@ -55,7 +55,3 @@ public class AuthServiceImpl implements AuthService {
         return customer;
     }
 }
-
-// asldjblajsdbljabsd
-// nmzxbcmnxzbcmnzbxcmnzc
-// qpoweıqpoweıpwoqıe
