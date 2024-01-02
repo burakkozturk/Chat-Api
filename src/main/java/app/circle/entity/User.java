@@ -33,6 +33,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role = "ROLE_USER";
 
+    // List<Conversation>
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
