@@ -34,6 +34,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role = "ROLE_USER";
 
+<<<<<<< .merge_file_QdKYT2
     /*
     *
     * String ProfilePhoto
@@ -42,6 +43,9 @@ public class User implements UserDetails {
     *
     *
     * */
+=======
+    // List<Conversation>
+>>>>>>> .merge_file_n3OtwC
 
 
 
