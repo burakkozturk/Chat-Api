@@ -20,10 +20,11 @@ import java.util.UUID;
 @Entity
 public class User implements UserDetails {
 
+
+
     @Id
     @GeneratedValue
     private UUID id;
-
     private String email;
     private String nickname;
     private String password;
@@ -33,7 +34,14 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role = "ROLE_USER";
 
-    // List<Conversation>
+    /*
+    *
+    * String ProfilePhoto
+    *
+    * boolean isOnline
+    *
+    *
+    * */
 
 
 
