@@ -9,7 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
+import java.util.List;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -25,8 +28,10 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private UUID id;
+    @Email(message = "Invalid Email Address")
     private String email;
     private String nickname;
+    @NotEmpty(message = "Password cannot be empty.")
     private String password;
     @Column( nullable = true)
     private String phoneNumber;
@@ -34,19 +39,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role = "ROLE_USER";
 
-<<<<<<< .merge_file_QdKYT2
-    /*
-    *
-    * String ProfilePhoto
-    *
-    * boolean isOnline
-    *
-    *
-    * */
-=======
-    // List<Conversation>
->>>>>>> .merge_file_n3OtwC
-
+    @ManyToMany(mappedBy = "memberList")
+    private List<Conversation> conversations;
 
 
     @Override

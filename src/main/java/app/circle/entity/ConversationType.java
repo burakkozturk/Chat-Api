@@ -1,9 +1,7 @@
 package app.circle.entity;
 
 public enum ConversationType {
-    PRIVATE,
+    PIRVATE,
     GROUP,
     CHAMBER
 }
-
-// How to generate

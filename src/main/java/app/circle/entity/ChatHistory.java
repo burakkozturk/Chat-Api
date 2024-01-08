@@ -1,31 +1,27 @@
 package app.circle.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
+import java.util.List;
+@Entity
+@Table(name = "_chat_history")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="_message")
-@Entity
-public class Message {
-
+public class ChatHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content; // will convert messageType
+    @JoinColumn(name = "conversation_id")
+    private Long conversationId;
 
-    private User sender;
-
-
-    @ManyToOne
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_history_id")
-    private ChatHistory chatHistory;
+    private List<Message> messages;
 
 }
