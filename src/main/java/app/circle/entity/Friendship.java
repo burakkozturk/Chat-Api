@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FriendShip {
+public class Friendship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +24,12 @@ public class FriendShip {
     private UUID user2Id;
 
     private int status;
+
+    /*
+
+    * if status 1 request has been sent
+    * if status 2 request is rejected
+    * if status 3 request has been accepted
+
+    */
 }
