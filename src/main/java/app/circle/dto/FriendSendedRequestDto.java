@@ -6,19 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FriendRequestDto {
+public class FriendSendedRequestDto {
     private Long id;
-    private UUID senderId;
+    private UUID receiverId;
 
 
-    public FriendRequestDto(FriendshipRequest friendshipRequest) {
+    public FriendSendedRequestDto(FriendshipRequest friendshipRequest) {
         if (friendshipRequest != null) {
             this.id = friendshipRequest.getId();
-            this.senderId = friendshipRequest.getSenderId();
+            this.receiverId = friendshipRequest.getReceiverId();
         }
     }
 }
