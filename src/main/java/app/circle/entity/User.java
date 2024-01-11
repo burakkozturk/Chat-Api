@@ -28,11 +28,15 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private UUID id;
+
     @Email(message = "Invalid Email Address")
     private String email;
+
     private String nickname;
+
     @NotEmpty(message = "Password cannot be empty.")
     private String password;
+
     @Column( nullable = true)
     private String phoneNumber;
 
@@ -41,6 +45,9 @@ public class User implements UserDetails {
 
     @ManyToMany(mappedBy = "memberList")
     private List<Conversation> conversations;
+
+    private String profilePhoto;
+
 
 
     @Override
