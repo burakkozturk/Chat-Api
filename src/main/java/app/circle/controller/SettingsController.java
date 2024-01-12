@@ -19,6 +19,15 @@ public class SettingsController {
         this.settingsService = settingsService;
     }
 
+
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchByNickname(@RequestParam String nickname) {
+        List<User> users = settingsService.searchByNickname(nickname);
+        return ResponseEntity.ok(users);
+    }
+
+
     @PutMapping("/update-nickname/{userId}")
     public ResponseEntity<User> updateUserNickname(
             @PathVariable UUID userId,
@@ -53,10 +62,19 @@ public class SettingsController {
     }
 
 
-    @GetMapping("/search")
-    public ResponseEntity<List<User>> searchByNickname(@RequestParam String nickname) {
-        List<User> users = settingsService.searchByNickname(nickname);
-        return ResponseEntity.ok(users);
+    @PutMapping("/reset-password/{userId}")
+    public ResponseEntity<User> resetUserPassword(
+            @PathVariable UUID userId,
+            @RequestParam String newPassword
+    ) {
+        User updatedUser = settingsService.resetUserPassword(userId, newPassword);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+
 
 }

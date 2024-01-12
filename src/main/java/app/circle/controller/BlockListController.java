@@ -1,6 +1,6 @@
 package app.circle.controller;
 
-import app.circle.entity.BlockList;
+
 import app.circle.service.BlockListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

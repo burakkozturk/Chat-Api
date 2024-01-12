@@ -67,4 +67,17 @@ public class SettingsService {
 
         return users;
     }
+
+
+    public User resetUserPassword(UUID userId, String newPassword) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(newPassword); // Şifreyi güncelle (şifreleme/haslama yapılmalıdır)
+            return userRepository.save(user);
+        }
+        return null;
+    }
+
+
 }

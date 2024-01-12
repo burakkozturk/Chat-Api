@@ -1,7 +1,6 @@
 package app.circle.service;
 
 import app.circle.entity.BlockList;
-import app.circle.entity.User;
 import app.circle.repository.BlockListRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +12,12 @@ import java.util.stream.Collectors;
 public class BlockListService {
 
     private final BlockListRepository blockListRepository;
+    private final FriendShipRequestService friendShipRequestService;
 
-    public BlockListService(BlockListRepository blockListRepository) {
+    public BlockListService(BlockListRepository blockListRepository, FriendShipRequestService friendShipRequestService) {
         this.blockListRepository = blockListRepository;
+        this.friendShipRequestService = friendShipRequestService;
     }
-
 
     public List<UUID> getBlockedUserList(UUID blockerId) {
         List<BlockList> blockedUsers = blockListRepository.findByBlockerUserId(blockerId);
@@ -33,6 +33,8 @@ public class BlockListService {
         blockList.setBlockedUserId(blockedUserId);
 
         blockListRepository.save(blockList);
+
+        //friendShipRequestService.removeFriends(blockerUserId,blockedUserId);
         return "User blocked successfully";
     }
 
