@@ -143,8 +143,5 @@ public class FriendShipRequestService {
         return ResponseEntity.ok("Removed");
     }
 
-    public void removeFriendship(UUID userId1, UUID userId2) {
-        // Burada userId1 ve userId2 arasındaki arkadaşlığı sonlandıran kodlarınız olacak.
-        // Örnek: friendRepository.deleteByUserIdAndFriendId(userId1, userId2);
-    }
+
 }
