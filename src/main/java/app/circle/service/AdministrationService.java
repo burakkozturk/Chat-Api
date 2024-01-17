@@ -32,6 +32,11 @@ public class AdministrationService {
     }
 
 
+    public List<BanList> getAllBannedUsers(){
+        return banListRepository.findAll();
+    }
+
+
     public BanList banUser(UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         BanList ban = new BanList();

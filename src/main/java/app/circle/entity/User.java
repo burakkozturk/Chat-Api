@@ -48,6 +48,9 @@ public class User implements UserDetails {
 
     private String profilePhoto;
 
+    private int reportScore;
+
+
 
 
     @Override

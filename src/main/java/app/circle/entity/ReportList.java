@@ -19,6 +19,7 @@ public class ReportList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private UUID whoIsReported;
     private UUID reportedUserId;
 
     @ManyToOne

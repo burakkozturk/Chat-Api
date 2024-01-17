@@ -41,10 +41,10 @@ public class ReportController {
     }
 
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<?> reportUser(@PathVariable UUID userId, @RequestParam Long reportId) {
+    @PostMapping("/{whoIsReported}/{userId}")
+    public ResponseEntity<?> reportUser(@PathVariable UUID whoIsReported,@PathVariable UUID userId, @RequestParam Long reportId) {
         try {
-            reportService.reportUser(userId, reportId);
+            reportService.reportUser(whoIsReported,userId, reportId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

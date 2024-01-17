@@ -18,4 +18,6 @@ public class Report {
     private Long id;
 
     private String type;
+
+    private int score;
 }

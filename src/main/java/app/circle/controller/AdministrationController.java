@@ -33,6 +33,13 @@ public class AdministrationController {
     }
 
 
+    @GetMapping("/banned")
+    public ResponseEntity<List<BanList>> getAllBannedUsers(){
+        List<BanList> list = administrationService.getAllBannedUsers();
+        return ResponseEntity.ok(list);
+    }
+
+
     @PostMapping("/ban/{userId}")
     public ResponseEntity<BanList> banUser(@PathVariable UUID userId) {
         BanList ban = administrationService.banUser(userId);
