@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User createUser(SignupRequest signupRequest) {
-        // E-posta veya telefon numarası zaten kayıtlı mı kontrol et
+
 
         if ("email".equalsIgnoreCase(signupRequest.getSignupType()) && userRepository.existsByEmail(signupRequest.getEmail())) {
             throw new RegistrationException("Email address is already registered");

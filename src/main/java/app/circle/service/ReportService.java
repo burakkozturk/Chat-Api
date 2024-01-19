@@ -44,7 +44,6 @@ public class ReportService {
 
 
     public List<Object[]> getTopReportedUsers(int limit) {
-
         return reportListRepository.findTopReportedUsers().stream().limit(limit).collect(Collectors.toList());
     }
 

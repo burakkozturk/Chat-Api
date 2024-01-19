@@ -3,6 +3,7 @@ package app.circle.service;
 import app.circle.dto.ProfileDto;
 import app.circle.entity.User;
 import app.circle.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,8 +16,11 @@ public class SettingsService {
 
     private final UserRepository userRepository;
 
-    public SettingsService(UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public SettingsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User updateUserNickname(UUID userId, String newNickname) {
@@ -73,11 +77,14 @@ public class SettingsService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            user.setPassword(newPassword); // Şifreyi güncelle (şifreleme/haslama yapılmalıdır)
+            // Şifreyi hashle
+            String hashedPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(hashedPassword);
             return userRepository.save(user);
         }
         return null;
     }
+
 
 
 }

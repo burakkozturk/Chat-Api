@@ -78,6 +78,7 @@ public class AuthenticationController {
             signupResponse.setPhoneNumber(createdUser.getPhoneNumber());
             signupResponse.setToken(token);
 
+
             return ResponseEntity.status(HttpStatus.CREATED).body(signupResponse);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create user");
