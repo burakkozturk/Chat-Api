@@ -35,7 +35,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**", "/verification/**",
                          "/friend-ship/**","/settings/**","/block/**",
-                        "/report/**","/admin/**").permitAll()
+                        "/report/**","/admin/**","/chat/**").permitAll()
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/**")
                 .authenticated()

@@ -57,6 +57,12 @@ public class FriendshipController {
     @PostMapping("/accept")
     public ResponseEntity<String> acceptFriendshipRequest(@RequestParam Long requestId) {
         return friendShipRequestService.acceptFriendshipRequest(requestId);
+
+        /*
+
+        Burada Accept Edildikten Sonra Conversation - Chat History Oluştursun.
+
+        */
     }
 
     @DeleteMapping("/requests/{requestId}")

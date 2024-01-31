@@ -68,7 +68,6 @@ public class SettingsService {
             // Burada, aynı kullanıcılar tekrar eklenmemesi için bir kontrol yapılabilir
             users.addAll(foundUsers);
         }
-
         return users;
     }
 
