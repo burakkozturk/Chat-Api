@@ -73,7 +73,7 @@ public class FriendshipController {
 
     @DeleteMapping("/friends/{friendId}")
     public ResponseEntity<String> removeFromFriends(@PathVariable Long friendId){
-        return friendShipRequestService.removeRequest(friendId);
+        return friendShipRequestService.removeFriends(friendId);
     }
 
 

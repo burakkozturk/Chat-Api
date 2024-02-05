@@ -2,19 +2,13 @@ package app.circle.service;
 
 import app.circle.dto.FriendRequestDto;
 import app.circle.dto.FriendSendedRequestDto;
-import app.circle.entity.Friend;
-import app.circle.entity.FriendshipRequest;
-import app.circle.entity.User;
-import app.circle.repository.FriendRepository;
-import app.circle.repository.FriendshipRequestRepository;
-import app.circle.repository.UserRepository;
+import app.circle.entity.*;
+import app.circle.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,11 +17,15 @@ public class FriendShipRequestService {
     private final FriendshipRequestRepository friendshipRequestRepository;
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final ConversationRepository conversationRepository;
+    private final ChatHistoryRepository chatHistoryRepository;
 
-    public FriendShipRequestService(FriendshipRequestRepository friendshipRequestRepository, FriendRepository friendRepository, UserRepository userRepository) {
+    public FriendShipRequestService(FriendshipRequestRepository friendshipRequestRepository, FriendRepository friendRepository, UserRepository userRepository, ConversationRepository conversationRepository, ChatHistoryRepository chatHistoryRepository) {
         this.friendshipRequestRepository = friendshipRequestRepository;
         this.friendRepository = friendRepository;
         this.userRepository = userRepository;
+        this.conversationRepository = conversationRepository;
+        this.chatHistoryRepository = chatHistoryRepository;
     }
 
 
@@ -109,28 +107,51 @@ public class FriendShipRequestService {
 
 
 
+    // Method içinde
     public ResponseEntity<String> acceptFriendshipRequest(Long requestId) {
         Optional<FriendshipRequest> friendshipRequestOptional = friendshipRequestRepository.findById(requestId);
 
         if (friendshipRequestOptional.isPresent()) {
             FriendshipRequest friendshipRequest = friendshipRequestOptional.get();
 
-
             Friend friend = new Friend();
             friend.setUser1(friendshipRequest.getSenderId());
             friend.setUser2(friendshipRequest.getReceiverId());
             friendRepository.save(friend);
 
+            // Yeni Conversation oluştur
+            Conversation conversation = new Conversation();
+            Set<User> members = new HashSet<>();
+            userRepository.findById(friendshipRequest.getSenderId()).ifPresent(members::add);
+            userRepository.findById(friendshipRequest.getReceiverId()).ifPresent(members::add);
 
+            conversation.setMemberList(members);
+            conversation.setConversationType(ConversationType.PRIVATE);
+
+            // Conversation'ı kaydet
+            Conversation savedConversation = conversationRepository.save(conversation);
+
+            // Yeni ChatHistory oluştur
+            ChatHistory chatHistory = new ChatHistory();
+            chatHistory.setConversationId(savedConversation.getId()); // Kaydedilen Conversation'ın ID'si
+            chatHistory.setMessages(new ArrayList<>()); // Boş mesaj listesi ile başlat
+
+            // ChatHistory'yi kaydet
+            chatHistoryRepository.save(chatHistory);
+
+            // FriendshipRequest'i sil
             friendshipRequestRepository.deleteById(requestId);
 
+            System.out.println("accepted"); // Konsola "accepted" yazdır
+
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("Friendship request accepted.");
+                    .body("Friendship request accepted and chat history created.");
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Friendship request not found.");
     }
+
 
     public ResponseEntity<String> removeRequest(Long requestId){
         friendshipRequestRepository.deleteById(requestId);
@@ -139,9 +160,33 @@ public class FriendShipRequestService {
 
 
     public ResponseEntity<String> removeFriends(Long friendId){
+        Optional<Friend> friendOptional = friendRepository.findById(friendId);
+        if (!friendOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Friend not found.");
+        }
+
+        Friend friend = friendOptional.get();
+        UUID user1Id = friend.getUser1();
+        UUID user2Id = friend.getUser2();
+
+        // İlişkili Conversation'ları bul
+        List<Conversation> conversations = conversationRepository.findByBothUserIds(user1Id, user2Id);
+        for (Conversation conversation : conversations) {
+            // İlişkili ChatHistory'yi bul ve sil
+            Optional<ChatHistory> chatHistoryOptional = chatHistoryRepository.findByConversationId(conversation.getId());
+            chatHistoryOptional.ifPresent(chatHistory -> chatHistoryRepository.delete(chatHistory));
+
+            // Conversation'ı sil
+            conversationRepository.delete(conversation);
+        }
+
+        // Arkadaşlık kaydını sil
         friendRepository.deleteById(friendId);
-        return ResponseEntity.ok("Removed");
+
+        return ResponseEntity.ok("Friend and related conversation and chat history removed.");
     }
+
+
 
 
 }
