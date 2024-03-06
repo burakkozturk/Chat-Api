@@ -106,8 +106,6 @@ public class FriendShipRequestService {
     }
 
 
-
-    // Method içinde
     public ResponseEntity<String> acceptFriendshipRequest(Long requestId) {
         Optional<FriendshipRequest> friendshipRequestOptional = friendshipRequestRepository.findById(requestId);
 

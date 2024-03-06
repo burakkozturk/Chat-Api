@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/friend-ship")
+@CrossOrigin
 public class FriendshipController {
 
     private final FriendShipRequestService  friendShipRequestService;
@@ -61,6 +62,9 @@ public class FriendshipController {
         /*
 
         Burada Accept Edildikten Sonra Conversation - Chat History Oluştursun.
+
+
+
 
         */
     }

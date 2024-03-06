@@ -1,5 +1,7 @@
 package app.circle.controller;
 
+import app.circle.dto.SendMessageRequest;
+import app.circle.entity.Message;
 import app.circle.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +20,9 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @PostMapping("/send")
-    public ResponseEntity<?> sendMessage(@RequestParam UUID senderId,
-                                         @RequestParam Long conversationId,
-                                         @RequestBody String messageContent) {
-        try {
-            chatService.sendMessage(senderId, conversationId, messageContent);
-            return ResponseEntity.ok("Message sent successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error sending message: " + e.getMessage());
-        }
+    @PostMapping("/send-message")
+    public ResponseEntity<Message> sendMessage(@RequestBody SendMessageRequest request) {
+        Message sentMessage = chatService.sendMessage(request.getSenderId(), request.getChatHistoryId(), request.getContent());
+        return ResponseEntity.ok(sentMessage);
     }
 }
